@@ -1,0 +1,7 @@
+numpy
+scipy
+statsmodels
+pandas
+matplotlib
+colour
+git+https://github.com/gfonseca92/Multi-armed-bandit
