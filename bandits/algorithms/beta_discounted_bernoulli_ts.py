@@ -1,4 +1,4 @@
-from bandits.algorithms.bernoulli_ts import ThompsonSampling
+from .bernoulli_ts import ThompsonSampling
 
 
 class BetaDiscountedThompsonSampling(ThompsonSampling):

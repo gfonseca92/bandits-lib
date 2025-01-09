@@ -1,7 +1,6 @@
 """
 This module contains the abstract class Bandit, which is the base class for all bandit algorithms.
 """
-from itertools import combinations
 import numpy as np
 from abc import ABC, abstractmethod
 

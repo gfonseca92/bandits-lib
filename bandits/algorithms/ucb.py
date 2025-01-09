@@ -1,5 +1,5 @@
 import numpy as np
-from bandits.bandit import Bandit
+from .bandit import Bandit
 
 
 class UCB1(Bandit):
