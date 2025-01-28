@@ -39,8 +39,8 @@ class ThompsonSampling(Bandit):
     def sample(self):
         samples_list = [
             np.random.beta(
-                a=v["alpha"],
-                b=v["beta"]
+                a=v["alpha"] + 1,
+                b=v["beta"] + 1
             )
             for v in self.beta_distributions.values()
         ]

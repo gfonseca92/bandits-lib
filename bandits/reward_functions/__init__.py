@@ -1,4 +1,5 @@
 __all__ = [
+    "available_reward_functions",
     "BaseLabeler",
     "BernoulliArm",
     "BinaryArm",
@@ -30,3 +31,19 @@ from .returns import (
     WindowedNegativeReturnArm,
     WindowedMeanReturnArm
 )
+
+available_reward_functions = {
+    "BernoulliArm": BernoulliArm,
+    "BinaryArm": BinaryArm,
+    "ContinuousArm": ContinuousArm,
+    "DiscreteArm": DiscreteArm,
+    "SharpeArm": SharpeArm,
+    "ReturnArm": ReturnArm,
+    "DiscountedReturns": DiscountedReturns,
+    "WindowedReturnArm": WindowedReturnArm,
+    "WindowedSharpeArm": WindowedSharpeArm,
+    "LastReturnArm": LastReturnArm,
+    "MeanReturnArm": MeanReturnArm,
+    "WindowedMeanReturnArm": WindowedMeanReturnArm,
+    "WindowedNegativeReturnArm": WindowedNegativeReturnArm,
+}

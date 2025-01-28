@@ -82,7 +82,3 @@ class WindowedMeanReturnArm(BaseLabeler):
             return arm_return.mean()
         else:
             return arm_return[-self.window:].mean()
-
-
-class BellmanEquationArm(BaseLabeler):
-    pass

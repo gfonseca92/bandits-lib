@@ -5,3 +5,12 @@ pandas
 matplotlib
 colour
 git+https://github.com/gfonseca92/Multi-armed-bandit
+jupyterlab
+tqdm
+scienceplots
+yfinance
+getfactormodels
+diskcache
+ffn
+pandas-datareader
+numba

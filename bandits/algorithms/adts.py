@@ -49,22 +49,17 @@ class AdaptiveDiscountedThompsonSampling(BetaDiscountedThompsonSampling):
         return np.argmax(samples_list)
 
     def update(self, chosen_arm, reward, max_reward):
-        for arm, value in self.beta_distributions.items():
-            binary_selected_arm_multiplier = int(arm == chosen_arm)
-            binary_max_reward_multiplier = int(reward == max_reward)
-            if binary_selected_arm_multiplier == 1:
-                self.w_beta_distributions[arm]["rewards"] = np.append(
-                    self.w_beta_distributions[arm]["rewards"],
-                    binary_max_reward_multiplier
-                )
-                self.beta_distributions[arm]["alpha"] = max(
-                    1.,
-                    self.beta_distributions[arm]["alpha"] * self.gamma +
-                    binary_selected_arm_multiplier * binary_max_reward_multiplier
-                )
-                self.beta_distributions[arm]["beta"] = max(
-                    1.,
-                    self.beta_distributions[arm]["beta"] * self.gamma +
-                    binary_selected_arm_multiplier * (1 - binary_max_reward_multiplier)
-                )
+        binary_max_reward_multiplier = int(reward == max_reward)
+        self.w_beta_distributions[chosen_arm]["rewards"] = np.append(
+            self.w_beta_distributions[chosen_arm]["rewards"],
+            binary_max_reward_multiplier
+        )
+        self.beta_distributions[chosen_arm]["alpha"] = (
+                self.beta_distributions[chosen_arm]["alpha"] +
+                self.gamma + binary_max_reward_multiplier
+        )
+        self.beta_distributions[chosen_arm]["beta"] = (
+                self.beta_distributions[chosen_arm]["beta"] +
+                self.gamma + (1 - binary_max_reward_multiplier)
+        )
         self.chosen_arms.append(chosen_arm)

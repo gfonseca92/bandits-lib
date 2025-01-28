@@ -14,6 +14,7 @@ class CavenaghiFDSWTS(Bandit):
                 n_arms: int,
                 gamma: float = 0.9,
                 n: int = 30,
+                seed: int = 42,
                 store_estimates: bool = True
         ):
             if f == 'min':
@@ -24,10 +25,14 @@ class CavenaghiFDSWTS(Bandit):
                 self._algo = MeanDSWTS(n_arms=n_arms, gamma=gamma, n=n, store_estimates=store_estimates)
             else:
                 raise ValueError('f must be one of "min", "max", "mean"')
-            super().__init__(n_arms, self._algo)
+            super().__init__(n_arms, seed=seed)
 
         def update(self, chosen_arm, reward, max_reward):
-            self._algo.update_estimates(chosen_arm, reward)
+            if reward == max_reward:
+                reward = 1
+            else:
+                reward = 0
+            self._algo.update_estimates(int(chosen_arm), int(reward))
 
         def select_arm(self):
             return self._algo.select_action()
