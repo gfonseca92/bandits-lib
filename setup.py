@@ -8,7 +8,7 @@ setup(
     description="Package to run multi-armed bandit algorithms related to portfolio optimization.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/gfonseca92/Multi-armed-bandit",
+    url="https://github.com/gfonseca92/bandits-lib",
     packages=find_packages(),
     install_requires=[
         "numpy>=1.21.0",
