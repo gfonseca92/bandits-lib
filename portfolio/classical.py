@@ -1,3 +1,5 @@
+import pandas as pd
+
 from .base import PortfolioResultsRetriever
 import numpy as np
 from numpy import ndarray
@@ -12,7 +14,7 @@ class MarkovitzPortfolio(PortfolioResultsRetriever):
 
     def calculate_weights(self, data: ndarray, **kwargs) -> ndarray:
         cov = np.cov(data, rowvar=False)
-        inv_cov = np.linalg.inv(cov)
+        inv_cov = np.linalg.pinv(cov)
         ones = np.ones(cov.shape[0])
         # avoid short selling
         weights = np.dot(inv_cov, ones) / np.dot(ones, np.dot(inv_cov, ones))
@@ -37,7 +39,7 @@ class RiskParityPortfolio(PortfolioResultsRetriever):
     def calculate_weights(self, data: ndarray, **kwargs) -> ndarray:
         cov = np.cov(data, rowvar=False)
         vol = np.sqrt(np.diag(cov))
-        inv_vol = 1 / vol
+        inv_vol = 1 / (vol + 1e-12)
         return inv_vol / np.sum(inv_vol)
 
 

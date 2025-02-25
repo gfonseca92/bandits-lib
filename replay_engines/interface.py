@@ -59,7 +59,7 @@ class BacktestInterface:
                 "agents": [],
             }
         }
-        for i in range(self.n_simulations):
+        for i in tqdm(range(self.n_simulations)):
             kwargs = args["args"].copy()
             kwargs["seed"] = seeds[i]
             rewards, policy = run_numpy_backtest(
@@ -88,7 +88,7 @@ class BacktestInterface:
         with ThreadPoolExecutor(max_workers=max_threads) as executor:
             futures = {
                 executor.submit(self.run_backtest, policy_name, args): policy_name
-                for policy_name, args in tqdm(self.bandit_policies.items())
+                for policy_name, args in self.bandit_policies.items()
             }
             for future in as_completed(futures):
                 policy_results = future.result()
@@ -188,20 +188,21 @@ class BanditNetworkBacktestInterface(BacktestInterface):
                 "chosen_superarms": [],
             }
         }
-        for i in range(self.n_simulations):
+        for i in tqdm(range(self.n_simulations)):
             policy_args = args["args"].copy()
             policy_args["seed"] = seeds[i]
             rewards, chosen_superarms_dict, combinatorial_policy, policy = (
                 run_bandit_network_backtest(
                     portfolio_size=self.portfolio_size,
-                    sequential_policy_name=args["sequential_policy_name"],
-                    sequential_policy_args=args["sequential_policy_args"],
-                    policy_name=args["policy_name"],
                     policy_args=policy_args,
-                    numpy_portfolio=np.array(self.portfolio),
-                    sequential_arm=self.reward_function,
+                    portfolio=np.array(self.portfolio),
+                    final_layer_arm=self.reward_function,
                     arm=self.reward_function,
-                    n_partitions=self.portfolio_size
+                    n_partitions=self.portfolio_size,
+                    network_name=args["network_name"],
+                    final_layer_policy_name=args["final_layer_policy_name"],
+                    final_layer_policy_args=args["final_layer_policy_args"],
+                    policy_name=args["policy_name"],
                 )
             )
             rewards_matrix[:, i] = np.array(rewards)
@@ -227,12 +228,13 @@ class BanditNetworkBacktestInterface(BacktestInterface):
 # portfolio = portfolio.drop(columns=['TIA-USD', 'OP-USD', 'UNI-USD', 'ARB-USD'], axis=1)
 # portfolio = portfolio[portfolio.mean().sort_values(ascending=False).index[:60]]
 #
-# portfolio_size = 10
+# portfolio_size = 4
 #
 # bandit_net_policies = {
 #     f"Two Stage ADTS | (n={portfolio_size})": {
-#         "sequential_policy_name": "AdaptiveDiscountedThompsonSampling",
-#         "sequential_policy_args": {"n_arms": portfolio.shape[1], "gamma": 0.5, "f": "mean", "w": 160},
+#         "network_name": "CombinatorialBanditNetwork",
+#         "final_layer_policy_name": "CombinatorialAdaptiveDiscountedThompsonSampling",
+#         "final_layer_policy_args": {"n_arms": portfolio.shape[1], "gamma": 0.5, "f": "mean", "w": 160},
 #         "policy_name": "AdaptiveDiscountedThompsonSampling",
 #         "args": {"n_arms": portfolio.shape[1], "gamma": 0.5, "f": "min", "w": 160},
 #         "combinatorial_agents": [],
@@ -240,8 +242,9 @@ class BanditNetworkBacktestInterface(BacktestInterface):
 #         "chosen_superarms": []
 #     },
 #     f"Two ADTS + UCB1 | (n={portfolio_size})": {
-#         "sequential_policy_name": "AdaptiveDiscountedThompsonSampling",
-#         "sequential_policy_args": {"n_arms": portfolio.shape[1], "gamma": 0.5, "f": "mean", "w": 160},
+#         "network_name": "BanditNetwork",
+#         "final_layer_policy_name": "AdaptiveDiscountedThompsonSampling",
+#         "final_layer_policy_args": {"n_arms": portfolio.shape[1], "gamma": 0.5, "f": "mean", "w": 160},
 #         "policy_name": "UCB1",
 #         "args": {},
 #         "combinatorial_agents": [],
@@ -249,8 +252,9 @@ class BanditNetworkBacktestInterface(BacktestInterface):
 #         "chosen_superarms": []
 #     },
 #     f"Two ADTS + f-DSW TS | (n={portfolio_size})": {
-#         "sequential_policy_name": "AdaptiveDiscountedThompsonSampling",
-#         "sequential_policy_args": {"n_arms": portfolio.shape[1], "gamma": 0.5, "f": "mean", "w": 160},
+#         "network_name": "BanditNetwork",
+#         "final_layer_policy_name": "AdaptiveDiscountedThompsonSampling",
+#         "final_layer_policy_args": {"n_arms": portfolio.shape[1], "gamma": 0.5, "f": "mean", "w": 160},
 #         "policy_name": "CavenaghiFDSWTS",
 #         "args": {"n_arms": portfolio.shape[1], "gamma": 0.5, "f": "min", "n": 160},
 #         "combinatorial_agents": [],

@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from bandits.algorithms import available_bandits, Bandit
 from typing import Dict, Tuple, List
-from bandits.networks import BanditNetwork
+from bandits.networks import available_bandit_networks
 from numba import njit, prange, jit
 
 
@@ -81,39 +81,20 @@ def run_numba_backtest(
 
 
 def run_bandit_network_backtest(
-        sequential_policy_name: str,
-        sequential_policy_args: Dict,
-        policy_name: str,
-        policy_args: Dict,
-        numpy_portfolio: np.array,
-        portfolio_size: int,
-        arm,
-        sequential_arm,
-        shift=0,
-        n_partitions=10,
-        extended_parallel_top_arms=1) -> Tuple[List, Dict, List, Bandit]:
+        network_name: str,
+        **kwargs) -> Tuple[List, Dict, List, Bandit]:
 
-    bn = BanditNetwork(
-        portfolio=numpy_portfolio,
-        policy_name=policy_name,
-        policy_args=policy_args,
-        sequential_policy_name=sequential_policy_name,
-        sequential_policy_args=sequential_policy_args,
-        n_partitions=n_partitions,
-        portfolio_size=portfolio_size,
-        extended_parallel_top_arms=extended_parallel_top_arms,
-        arm=arm,
-        sequential_arm=sequential_arm
-    )
+    bn = available_bandit_networks[network_name](**kwargs)
     rewards = []
     chosen_superarms_dict = {
         "bandit_arms": [],
         "weights": []
     }
-
+    shift = kwargs.get("shift", 0)
+    numpy_portfolio = kwargs.get("portfolio")
     for t in range(shift, len(numpy_portfolio)):
         real_reward, top_columns, chosen_super_arm, weights = bn.forward_propagation(t)
         rewards.append(real_reward)
         chosen_superarms_dict["bandit_arms"].append(top_columns)
         chosen_superarms_dict["weights"].append(weights)
-    return rewards, chosen_superarms_dict, bn.network["sequential_layer"]["policy"], bn.network["sequential_layer"]["policy"]
+    return rewards, chosen_superarms_dict, bn.network["final_layer"]["policy"], bn.network["final_layer"]["policy"]
