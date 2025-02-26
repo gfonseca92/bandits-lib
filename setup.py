@@ -11,6 +11,7 @@ setup(
     url="https://github.com/gfonseca92/bandits-lib",
     packages=find_packages(),
     install_requires=[
+        "git+https://github.com/gfonseca92/Multi-armed-bandit.git>=0.1.0",
         "numpy>=1.21.0",
         "pandas>=1.3.0",
         "scikit-learn>=0.24.0",
