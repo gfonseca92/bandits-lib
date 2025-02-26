@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
-from bandits.algorithms import available_bandits, Bandit
+from bandits_lib.bandits.algorithms import available_bandits, Bandit
 from typing import Dict, Tuple, List
-from bandits.networks import available_bandit_networks
+from bandits_lib.bandits.networks import available_bandit_networks
 from numba import njit, prange, jit
 
 

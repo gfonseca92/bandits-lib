@@ -1,5 +1,5 @@
-from bandits.reward_functions import available_reward_functions
-from replay_engines.backtester import run_bandit_network_backtest, run_numpy_backtest
+from bandits_lib.bandits.reward_functions import available_reward_functions
+from bandits_lib.replay_engines.backtester import run_bandit_network_backtest, run_numpy_backtest
 import numpy as np
 from pandas import DataFrame
 from tqdm import tqdm

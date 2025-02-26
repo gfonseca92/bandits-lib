@@ -1,6 +1,6 @@
 from pandas import DataFrame
 from collections import Counter
-from bandits.algorithms import available_bandits
+from bandits_lib.bandits.algorithms import available_bandits
 import numpy as np
 from typing import Dict, List, Tuple
 
