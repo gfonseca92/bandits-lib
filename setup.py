@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="bandits-lib",
-    version="0.1.0",
+    version="0.2.0",
     author="Gustavo Fonseca",
     author_email="gustavo.fonseca@ga.ita.br",
     description="Package to run multi-armed bandit algorithms related to portfolio optimization.",
